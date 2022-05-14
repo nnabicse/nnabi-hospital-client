@@ -3,7 +3,9 @@ import Banner from './Banner';
 import BannerSecond from './BannerSecond';
 import './Home.css';
 import Info from './Info';
+import MakeAppoinment from './MakeAppoinment';
 import Services from './Services';
+import Testimonials from './Testimonials';
 
 const Home = () => {
     return (
@@ -12,6 +14,8 @@ const Home = () => {
             <Info></Info>
             <Services></Services>
             <BannerSecond></BannerSecond>
+            <MakeAppoinment></MakeAppoinment>
+            <Testimonials></Testimonials>
         </div>
     );
 };
