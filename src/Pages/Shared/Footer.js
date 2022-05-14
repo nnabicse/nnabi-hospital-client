@@ -18,7 +18,6 @@ const Footer = () => {
                     <span class="footer-title">Oral Health</span>
                     <a class="link link-hover">Fluoride Treatment</a>
                     <a class="link link-hover">Cavity Filling</a>
-                    <a class="link link-hover">Jobs</a>
                     <a class="link link-hover">Teeth Whitening</a>
                 </div>
                 <div>
@@ -26,8 +25,8 @@ const Footer = () => {
                     <p>263, NYC-1200 South Mad</p>
                 </div>
             </div>
-            <div>
-                <p>Copyright © 2022 - All right reserved by ACME Industries Ltd</p>
+            <div className='mt-10 text-center'>
+                <p>Copyright © 2022 - All right reserved by NNABI Hospital</p>
             </div>
 
         </footer>
