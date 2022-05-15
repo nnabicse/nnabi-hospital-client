@@ -5,7 +5,6 @@ import auth from '../../firebase.init';
 import { useForm } from "react-hook-form";
 import './Login.css'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { useNavigation } from 'react-day-picker';
 
 
 const Login = () => {
