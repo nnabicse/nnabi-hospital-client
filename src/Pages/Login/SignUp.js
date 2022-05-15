@@ -1,34 +1,42 @@
 import React from 'react';
-import { useCreateUserWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { useCreateUserWithEmailAndPassword, useSignInWithGoogle, useUpdateProfile } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
 import { useForm } from "react-hook-form";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
 
 const SignUp = () => {
+
     const { register, formState: { errors }, handleSubmit } = useForm();
     const [signInWithGoogle, socialUser, socialLoading, socialError] = useSignInWithGoogle(auth);
+    const [updateProfile, updating, updateError] = useUpdateProfile(auth);
     const [
         createUserWithEmailAndPassword,
         user,
         loading,
         error,
     ] = useCreateUserWithEmailAndPassword(auth);
+    const navigate = useNavigate();
     let registerError;
     let registerLoading;
-    const onSubmit = data => {
-        createUserWithEmailAndPassword(data.email, data.password);
-    };
-    if (loading || socialLoading) {
-        registerError = <div class="flex items-center justify-center">
+    if (loading || socialLoading || updating) {
+        registerLoading = <div class="flex items-center justify-center">
             <button class="btn btn-square loading text-black bg-white border-0"></button>
         </div>
     }
-    if (error || socialError) {
-        registerLoading = <p className='text-red-500'>{error?.message || socialError?.message}</p>
+    if (error || socialError || updateError) {
+        registerError = <p className='text-red-500'>{error?.message || socialError?.message || updateError?.message}</p>
     }
     if (socialUser || user) {
         console.log(socialUser || user);
     }
+    const onSubmit = async data => {
+        await createUserWithEmailAndPassword(data.email, data.password);
+        await updateProfile({ displayName: data.name });
+        await navigate('/appoinment')
+
+    };
+
     return (
         <div className='flex justify-center items-center h-screen'>
             <div class="card w-96 bg-base-100 shadow-xl">
