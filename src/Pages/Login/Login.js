@@ -1,18 +1,35 @@
 
 import React from 'react';
-import { useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
 import { useForm } from "react-hook-form";
 import './Login.css'
 
+
 const Login = () => {
     const { register, formState: { errors }, handleSubmit } = useForm();
-    const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
+    const [signInWithGoogle, socialUser, socialLoading, socialError] = useSignInWithGoogle(auth);
+    const [
+        signInWithEmailAndPassword,
+        user,
+        loading,
+        error,
+    ] = useSignInWithEmailAndPassword(auth);
+    let signInError;
+    let signInLoading;
     const onSubmit = data => {
-        console.log(data)
+        signInWithEmailAndPassword(data.email, data.password);
     };
-    if (user) {
-        console.log(user);
+    if (loading || socialLoading) {
+        signInLoading = <div class="flex items-center justify-center">
+            <button class="btn btn-square loading text-black bg-white border-0"></button>
+        </div>
+    }
+    if (error || socialError) {
+        signInError = <p className='text-red-500'>{error?.message || socialError?.message}</p>
+    }
+    if (socialUser || user) {
+        console.log(socialUser || user);
     }
     return (
         <div className='flex justify-center items-center h-screen'>
@@ -60,7 +77,9 @@ const Login = () => {
 
                             </label>
                         </div>
-                        <input className='btn w-full text-white' type="submit" value={"Login"} />
+                        {signInError}
+                        {signInLoading}
+                        <input className='btn w-full text-white' type="submit" value="Login" />
                     </form>
                     <div class="divider">OR</div>
                     <button onClick={() => signInWithGoogle()} class="btn btn-outline">Continue With Google</button>
