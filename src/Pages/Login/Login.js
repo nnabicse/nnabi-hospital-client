@@ -21,9 +21,6 @@ const Login = () => {
         loading,
         error,
     ] = useSignInWithEmailAndPassword(auth);
-    const [sendPasswordResetEmail, sending, resetError] = useSendPasswordResetEmail(
-        auth
-    );
     let signInError;
     let signInLoading;
     const onSubmit = async data => {

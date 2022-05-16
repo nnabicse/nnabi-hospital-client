@@ -2,17 +2,46 @@ import React from 'react';
 import { format } from 'date-fns';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
+import Swal from 'sweetalert2'
 
 const BookingModal = ({ treatment, date, setTreatment }) => {
+    const [user] = useAuthState(auth);
     const { _id, name, slots } = treatment
+    const formattedDate = format(date, 'PP')
     const handleBooking = event => {
         event.preventDefault()
         const slot = event.target.slot.value;
         console.log(_id, name, slot);
+        const booking = {
+            treatmentId: _id,
+            treatment: name,
+            date: formattedDate,
+            slot,
+            patient: user.email,
+            patientName: user.displayName,
+            phone: event.target.phone.value
+
+        }
+
+        fetch("http://localhost:5000/booking", {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(booking)
+        })
+            .then(res => res.json())
+            .then(data =>
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Booking Successfull',
+                    showConfirmButton: false,
+                    timer: 1500
+                }))
         setTreatment(null);
 
     }
-    const [user] = useAuthState(auth);
     console.log(user)
     return (
         <div>
