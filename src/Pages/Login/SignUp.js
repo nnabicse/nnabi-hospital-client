@@ -22,21 +22,6 @@ const SignUp = () => {
     const navigate = useNavigate();
     let registerError;
     let registerLoading;
-    const onSubmit = async data => {
-        await createUserWithEmailAndPassword(data.email, data.password);
-        await updateProfile({ displayName: data.name });
-        await sendEmailVerification();
-        await Swal.fire({
-            position: 'top-end',
-            icon: 'success',
-            title: 'Sign Up Succesfull',
-            showConfirmButton: false,
-            timer: 1500
-        })
-        // navigate('/appoinment')
-
-    };
-    const [token] = useToken(user || socialUser);
 
     if (loading || socialLoading || updating) {
         registerLoading = <div class="flex items-center justify-center">
@@ -46,9 +31,25 @@ const SignUp = () => {
     if (error || socialError || updateError) {
         registerError = <p className='text-red-500'>{error?.message || socialError?.message || updateError?.message}</p>
     }
+
+    const onSubmit = async data => {
+        await createUserWithEmailAndPassword(data.email, data.password);
+        await updateProfile({ displayName: data.name });
+        await sendEmailVerification();
+
+    };
+    const [token] = useToken(user || socialUser);
     if (token) {
         navigate('/appoinment')
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Sign Up Succesfull',
+            showConfirmButton: false,
+            timer: 1500
+        })
     }
+
 
 
     return (

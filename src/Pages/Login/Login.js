@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import './Login.css'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSendPasswordResetEmail } from 'react-firebase-hooks/auth';
+import useToken from '../../hooks/useToken';
 
 
 const Login = () => {
@@ -37,7 +38,9 @@ const Login = () => {
     if (socialUser || user) {
         console.log(socialUser || user);
     }
-    if (user) {
+
+    const [token] = useToken(user || socialUser);
+    if (token) {
         navigate(from, { replace: true });
     }
     return (
