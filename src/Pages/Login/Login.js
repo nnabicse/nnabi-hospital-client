@@ -26,8 +26,8 @@ const Login = () => {
     );
     let signInError;
     let signInLoading;
-    const onSubmit = data => {
-        signInWithEmailAndPassword(data.email, data.password);
+    const onSubmit = async data => {
+        await signInWithEmailAndPassword(data.email, data.password);
     };
     if (loading || socialLoading) {
         signInLoading = <div class="flex items-center justify-center">

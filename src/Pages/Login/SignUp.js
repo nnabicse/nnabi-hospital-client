@@ -1,8 +1,9 @@
 import React from 'react';
-import { useCreateUserWithEmailAndPassword, useSignInWithGoogle, useUpdateProfile } from 'react-firebase-hooks/auth';
+import { useCreateUserWithEmailAndPassword, useSendEmailVerification, useSignInWithGoogle, useUpdateProfile } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 
 const SignUp = () => {
@@ -16,6 +17,7 @@ const SignUp = () => {
         loading,
         error,
     ] = useCreateUserWithEmailAndPassword(auth);
+    const [sendEmailVerification, sending, verificationError] = useSendEmailVerification(auth);
     const navigate = useNavigate();
     let registerError;
     let registerLoading;
@@ -33,7 +35,15 @@ const SignUp = () => {
     const onSubmit = async data => {
         await createUserWithEmailAndPassword(data.email, data.password);
         await updateProfile({ displayName: data.name });
-        await navigate('/appoinment')
+        await sendEmailVerification();
+        await Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Sign Up Succesfull',
+            showConfirmButton: false,
+            timer: 1500
+        })
+        navigate('/appoinment')
 
     };
 
