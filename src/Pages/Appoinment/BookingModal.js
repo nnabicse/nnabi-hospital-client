@@ -31,18 +31,31 @@ const BookingModal = ({ treatment, date, setTreatment }) => {
             body: JSON.stringify(booking)
         })
             .then(res => res.json())
-            .then(data =>
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'success',
-                    title: 'Booking Successfull',
-                    showConfirmButton: false,
-                    timer: 1500
-                }))
+            .then(async data => {
+                console.log(data)
+                if (data.success === false) {
+                    await Swal.fire({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: `Already Booked ${data.booking.treatment} Service at: ${data.booking.slot}`,
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                }
+
+                else {
+                    await Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: `Booked ${booking.treatment} Service at: ${booking.slot}`,
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                }
+            })
         setTreatment(null);
 
     }
-    console.log(user)
     return (
         <div>
             <input type="checkbox" id="booking-modal" class="modal-toggle" />
