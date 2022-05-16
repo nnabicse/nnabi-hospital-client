@@ -1,9 +1,12 @@
+import { signOut } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useNavigate } from 'react-router-dom';
 import auth from '../../firebase.init';
 
 const MyAppoinments = () => {
     const [user] = useAuthState(auth)
+    const navigate = useNavigate()
     const [appoinments, setAppoinments] = useState([])
     useEffect(() => {
         if (user) {
@@ -14,7 +17,14 @@ const MyAppoinments = () => {
                 }
 
             })
-                .then(res => res.json())
+                .then(res => {
+                    if (res.status === 401 || res.status === 403) {
+                        navigate('/home')
+                        signOut(auth);
+                        localStorage.removeItem("accessToken");
+                    }
+                    return res.json()
+                })
                 .then(data => setAppoinments(data));
         }
     }, [user])
