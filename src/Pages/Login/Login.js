@@ -1,13 +1,15 @@
 
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
 import { useForm } from "react-hook-form";
 import './Login.css'
-import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useSendPasswordResetEmail } from 'react-firebase-hooks/auth';
 
 
 const Login = () => {
+    const [email, setEmail] = useState('');
     const { register, formState: { errors }, handleSubmit } = useForm();
     const [signInWithGoogle, socialUser, socialLoading, socialError] = useSignInWithGoogle(auth);
     const location = useLocation()
@@ -19,6 +21,9 @@ const Login = () => {
         loading,
         error,
     ] = useSignInWithEmailAndPassword(auth);
+    const [sendPasswordResetEmail, sending, resetError] = useSendPasswordResetEmail(
+        auth
+    );
     let signInError;
     let signInLoading;
     const onSubmit = data => {
@@ -48,7 +53,7 @@ const Login = () => {
                             <label class="label">
                                 <span class="label-text">Email</span>
                             </label>
-                            <input {...register("email", {
+                            <input onChange={(e) => setEmail(e.target.value)} {...register("email", {
                                 required: {
                                     value: true,
                                     message: "Email is Required"
@@ -84,6 +89,7 @@ const Login = () => {
 
                             </label>
                         </div>
+                        <small>Forgot Password? <Link to='/resetpass'><span className='text-primary'>Reset</span></Link></small>
                         {signInError}
                         {signInLoading}
                         <input className='btn w-full text-white' type="submit" value="Login" />
