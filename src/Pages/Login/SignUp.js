@@ -4,6 +4,7 @@ import auth from '../../firebase.init';
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
+import useToken from '../../hooks/useToken';
 
 
 const SignUp = () => {
@@ -21,17 +22,6 @@ const SignUp = () => {
     const navigate = useNavigate();
     let registerError;
     let registerLoading;
-    if (loading || socialLoading || updating) {
-        registerLoading = <div class="flex items-center justify-center">
-            <button class="btn btn-square loading text-black bg-white border-0"></button>
-        </div>
-    }
-    if (error || socialError || updateError) {
-        registerError = <p className='text-red-500'>{error?.message || socialError?.message || updateError?.message}</p>
-    }
-    if (socialUser || user) {
-        console.log(socialUser || user);
-    }
     const onSubmit = async data => {
         await createUserWithEmailAndPassword(data.email, data.password);
         await updateProfile({ displayName: data.name });
@@ -43,9 +33,23 @@ const SignUp = () => {
             showConfirmButton: false,
             timer: 1500
         })
-        navigate('/appoinment')
+        // navigate('/appoinment')
 
     };
+    const [token] = useToken(user || socialUser);
+
+    if (loading || socialLoading || updating) {
+        registerLoading = <div class="flex items-center justify-center">
+            <button class="btn btn-square loading text-black bg-white border-0"></button>
+        </div>
+    }
+    if (error || socialError || updateError) {
+        registerError = <p className='text-red-500'>{error?.message || socialError?.message || updateError?.message}</p>
+    }
+    if (token) {
+        navigate('/appoinment')
+    }
+
 
     return (
         <div className='flex justify-center items-center h-screen'>
