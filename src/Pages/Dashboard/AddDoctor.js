@@ -2,18 +2,19 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useQuery } from 'react-query';
 import Loading from '../Shared/Loading';
+import Swal from 'sweetalert2'
 
 const AddDoctor = () => {
-    const { register, formState: { errors }, handleSubmit } = useForm();
+    const { register, formState: { errors }, handleSubmit, reset } = useForm();
     const { data: services, isLoading } = useQuery('services', () => fetch("http://localhost:5000/service").then(res => res.json()))
 
-    const imageStorageKey = "541ed4ca926450e9c8220b028b87be5a";
+    const imageStorageKey = "804c181e01c2839aad99e55be253bee5";
 
 
     const onSubmit = async data => {
         const image = data.image[0];
         const formData = new FormData();
-        formData.append("avatar", image);
+        formData.append("image", image);
         const url = `https://api.imgbb.com/1/upload?key=${imageStorageKey}`;
         fetch(url, {
             method: "POST",
@@ -31,7 +32,40 @@ const AddDoctor = () => {
                         img: img
                     }
 
-                    
+                    fetch("http://localhost:5000/doctor", {
+                        method: "POST",
+                        headers: {
+                            "content-Type": "application/json",
+                            "authorization": `Bearer ${localStorage.getItem("accessToken")}`
+
+                        },
+                        body: JSON.stringify(doctor)
+
+                    })
+                        .then(res => res.json())
+                        .then(inserted => {
+                            if (inserted.insertedId) {
+                                Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'success',
+                                    title: 'Doctor Added Successfully',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                                reset();
+                            }
+                            else {
+                                Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'error',
+                                    title: 'Failed to Add Doctor',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                            }
+                        })
+
+
                 }
             })
 
@@ -109,7 +143,7 @@ const AddDoctor = () => {
                         </label>
                     </div>
                 </div>
-                <div>
+                <div className='form-control w-full max-w-xs'>
                     <input className='btn w-full text-white' type="submit" value="Add" />
                 </div>
             </form>
