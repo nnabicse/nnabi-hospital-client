@@ -6,7 +6,7 @@ import Swal from 'sweetalert2'
 
 const AddDoctor = () => {
     const { register, formState: { errors }, handleSubmit, reset } = useForm();
-    const { data: services, isLoading } = useQuery('services', () => fetch("http://localhost:5000/service").then(res => res.json()))
+    const { data: services, isLoading } = useQuery('services', () => fetch("https://shrouded-journey-04696.herokuapp.com/service").then(res => res.json()))
 
     const imageStorageKey = "804c181e01c2839aad99e55be253bee5";
 
@@ -32,7 +32,7 @@ const AddDoctor = () => {
                         img: img
                     }
 
-                    fetch("http://localhost:5000/doctor", {
+                    fetch("https://shrouded-journey-04696.herokuapp.com/doctor", {
                         method: "POST",
                         headers: {
                             "content-Type": "application/json",
