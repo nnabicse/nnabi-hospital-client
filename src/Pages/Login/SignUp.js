@@ -114,7 +114,7 @@ const SignUp = () => {
                         </div>
                         {registerError}
                         {registerLoading}
-                        <input className='btn w-full text-white' type="submit" value="Login" />
+                        <input className='btn w-full text-white' type="submit" value="Sign Up" />
                         <small>Already Have an Account? <Link to='/login'><span className='text-primary'>Please Login</span></Link></small>
                     </form>
                     <div class="divider">OR</div>
